@@ -195,7 +195,7 @@ async function load() {
       message(
         "catalog-notice",
         isDemo
-          ? "Prévia: jogos de exemplo, sem downloads. Adicione seus jogos na área admin."
+          ? "Prévia: jogos de exemplo, sem downloads."
           : "",
       );
       render();
