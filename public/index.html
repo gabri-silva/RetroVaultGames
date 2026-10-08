@@ -3,130 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>RetroVault — Aperte play na nostalgia</title>
+    <title>RetroVault — Catálogo de jogos</title>
     <link rel="stylesheet" href="vendor/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <div class="top-strip">
-      <span>ARQUIVO DE MEMÓRIAS JOGÁVEIS</span
-      ><span>EST. 2026 · INSERT NOSTALGIA</span>
-    </div>
+  <body class="catalog-client">
     <header class="site-header container">
-      <a href="/" class="brand"
-        ><span class="brand-icon">▦</span>RETRO<span>VAULT</span
-        ><small>SEU ACERVO. SUAS MEMÓRIAS.</small></a
-      >
-      <nav>
-        <a href="#catalog">Explorar acervo</a
-        ><button id="favorites" class="nav-btn" aria-pressed="false">
-          ♡ Favoritos <span id="fav-count">0</span></button
-        ><a href="/admin" class="admin-link">Área admin ↗</a>
+      <a href="/" class="brand" aria-label="RetroVault, catálogo de jogos">
+        <span class="brand-icon" aria-hidden="true">▦</span>RETRO<span
+          >VAULT</span
+        >
+      </a>
+      <nav aria-label="Navegação do catálogo">
+        <button id="favorites" class="nav-btn" aria-pressed="false">
+          ♡ Favoritos <span id="fav-count">0</span>
+        </button>
       </nav>
     </header>
     <main>
-      <section class="hero container">
-        <div class="hero-copy">
-          <div class="kicker">
-            <span class="live-dot"></span> A PRÓXIMA FASE É UMA VIAGEM NO TEMPO
-          </div>
-          <h1>Os clássicos<br />nunca dão<br /><em>game over.</em></h1>
-          <p>
-            Dos cartuchos aos discos. Reencontre a emoção da primeira partida e
-            explore uma coleção feita para quem nunca deixou de jogar.
-          </p>
-          <a href="#catalog" class="btn btn-orange"
-            >EXPLORAR O ACERVO <span>↘</span></a
-          ><span class="hero-caption">SEM PRESSA. SEM CONTINUE LIMITADO.</span>
+      <section
+        id="catalog"
+        class="catalog container"
+        aria-label="Catálogo de jogos"
+      >
+        <h1 class="visually-hidden">Catálogo de jogos</h1>
+        <div class="catalog-toolbar">
+          <label class="search">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="search"
+              type="search"
+              placeholder="Buscar jogos…"
+              aria-label="Buscar jogos por nome, console ou gênero"
+            />
+          </label>
+          <select
+            id="genre"
+            class="form-select"
+            aria-label="Filtrar por gênero"
+          >
+            <option value="">Todos os gêneros</option>
+          </select>
+          <select id="sort" class="form-select" aria-label="Ordenar jogos">
+            <option value="recent">Mais recentes</option>
+            <option value="title">Nome: A–Z</option>
+            <option value="year">Ano de lançamento</option>
+          </select>
         </div>
-        <div class="arcade" aria-hidden="true">
-          <div class="arcade-top">RETROVAULT <span>★ ★ ★</span></div>
-          <div class="arcade-screen">
-            <div class="screen-label">PLAYER 01 <span>HI-SCORE 1998</span></div>
-            <div class="pixel-moon"></div>
-            <div class="pixel-mountains"></div>
-            <div class="pixel-city"></div>
-            <div class="pixel-road"></div>
-            <div class="screen-message">
-              PRESS START<span>YOUR NEXT ADVENTURE AWAITS</span>
-            </div>
-          </div>
-          <div class="arcade-controls">
-            <div class="joystick"></div>
-            <div class="arcade-button red"></div>
-            <div class="arcade-button mint"></div>
-            <div class="arcade-button yellow"></div>
-          </div>
-          <div class="arcade-bottom">16 BIT SOUL · INFINITE MEMORIES</div>
-          <span class="sticker">GOOD<br />OLD<br />DAYS ↗</span>
+        <div class="console-filters">
+          <div
+            id="platform-list"
+            role="group"
+            aria-label="Filtrar por console"
+          ></div>
+          <button id="clear-filters" class="clear-btn">Limpar filtros</button>
         </div>
-      </section>
-      <div class="ticker">
-        <span>✦ SAVE YOUR MEMORIES</span><span>✦ ONE MORE LEVEL</span
-        ><span>✦ RETRO NEVER DIES</span><span>✦ PRESS START AGAIN</span>
-      </div>
-      <section id="catalog" class="catalog container">
-        <div class="section-head">
-          <div>
-            <div class="kicker">ESCOLHA SUA PRÓXIMA AVENTURA</div>
-            <h2>Um acervo. <em>Muitas eras.</em></h2>
-          </div>
-          <span class="counter" id="total-count">CARREGANDO…</span>
+        <div id="catalog-notice" class="notice" role="status" hidden></div>
+        <div class="result-head">
+          <span id="result-label" role="status">Carregando jogos…</span>
+          <span id="total-count"></span>
         </div>
-        <div class="filter-layout">
-          <aside class="filter-panel">
-            <div class="filter-title">▦ CONSOLES</div>
-            <div id="platform-list"></div>
-            <label for="genre" class="filter-title mt-4">GÊNERO</label
-            ><select id="genre" class="form-select">
-              <option value="">Todos os gêneros</option></select
-            ><button id="clear-filters" class="clear-btn">
-              Limpar filtros ↺
-            </button>
-            <div class="sidebar-note">
-              Uma boa história<br />nunca fica velha.<span>✳</span>
-            </div>
-          </aside>
-          <div class="catalog-main">
-            <div class="catalog-toolbar">
-              <label class="search"
-                ><span>⌕</span
-                ><input
-                  id="search"
-                  type="search"
-                  placeholder="Qual jogo marcou sua história?"
-                  aria-label="Pesquisar jogos" /></label
-              ><select id="sort" class="form-select" aria-label="Ordenação">
-                <option value="recent">Mais recentes</option>
-                <option value="title">Nome: A–Z</option>
-                <option value="year">Ano de lançamento</option>
-              </select>
-            </div>
-            <div id="catalog-notice" class="notice" role="status" hidden></div>
-            <div class="result-head">
-              <span id="result-label"></span><span>SELECT YOUR GAME ↓</span>
-            </div>
-            <div id="game-grid" class="game-grid" aria-live="polite"></div>
-            <div id="pagination" class="pagination-bar"></div>
-          </div>
-        </div>
-      </section>
-      <section class="memory-band container">
-        <div class="memory-icon" aria-hidden="true">▣</div>
-        <div>
-          <div class="kicker">MEMORY CARD: INSERIDO</div>
-          <h2>Algumas memórias<br />merecem um <em>save.</em></h2>
-        </div>
-        <p>
-          Um lugar para organizar seus jogos,<br />preservar histórias e apertar
-          play de novo.
-        </p>
+        <div id="game-grid" class="game-grid" aria-live="polite"></div>
+        <div id="pagination" class="pagination-bar"></div>
       </section>
     </main>
-    <footer class="container">
-      <a class="brand" href="/">RETRO<span>VAULT</span></a>
-      <p>Feito para quem cresceu com um controle na mão.</p>
-      <a href="/admin">Gerenciar acervo ↗</a>
+    <footer class="container catalog-footer">
+      <span>RetroVault</span>
+      <a href="/admin">Área admin ↗</a>
     </footer>
     <dialog id="game-dialog">
       <button

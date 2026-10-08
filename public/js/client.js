@@ -5,6 +5,7 @@ let games = [],
   onlyFavorites = false,
   isDemo = false,
   lastRevision = -1;
+const PAGE_SIZE = 12;
 let favorites = new Set();
 try {
   favorites = new Set(
@@ -45,12 +46,12 @@ function platformRender() {
     counts.set(g.platform, (counts.get(g.platform) || 0) + 1),
   );
   $("platform-list").innerHTML =
-    `<button class="platform-btn ${!activePlatform ? "selected" : ""}" data-platform="">Todos os consoles <span>${games.length}</span></button>` +
+    `<button class="platform-btn ${!activePlatform ? "selected" : ""}" aria-pressed="${!activePlatform}" data-platform="">Todos os consoles <span>${games.length}</span></button>` +
     platforms
       .filter((p) => counts.has(p))
       .map(
         (p) =>
-          `<button class="platform-btn ${activePlatform === p ? "selected" : ""}" data-platform="${esc(p)}">${esc(p)} <span>${counts.get(p)}</span></button>`,
+          `<button class="platform-btn ${activePlatform === p ? "selected" : ""}" aria-pressed="${activePlatform === p}" data-platform="${esc(p)}">${esc(p)} <span>${counts.get(p)}</span></button>`,
       )
       .join("");
 }
@@ -78,7 +79,7 @@ function render() {
         Number(b.featured) - Number(a.featured) ||
         (b.createdAt || "").localeCompare(a.createdAt || ""),
     );
-  const pages = Math.max(1, Math.ceil(filtered.length / 9));
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   page = Math.min(page, pages);
   $("total-count").textContent = isDemo
     ? "PRÉVIA VISUAL"
@@ -87,10 +88,10 @@ function render() {
     `${filtered.length} ${filtered.length === 1 ? "jogo encontrado" : "jogos encontrados"}${onlyFavorites ? " · favoritos" : ""}`;
   $("game-grid").innerHTML = filtered.length
     ? filtered
-        .slice((page - 1) * 9, page * 9)
+        .slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
         .map(
           (g) =>
-            `<article class="game-card"><div class="cover-wrap"><button class="cover-button" data-details="${esc(g.id)}" aria-label="Ver detalhes de ${esc(g.title)}"><img src="${esc(coverUrl(g))}" alt="Capa de ${esc(g.title)}" loading="lazy"></button>${isDemo ? '<span class="cover-tag">EXEMPLO</span>' : g.featured ? '<span class="cover-tag">★ DESTAQUE</span>' : ""}<button class="fav-button ${favorites.has(g.id) ? "selected" : ""}" data-fav="${esc(g.id)}" aria-label="Favoritar ${esc(g.title)}" aria-pressed="${favorites.has(g.id)}">${favorites.has(g.id) ? "♥" : "♡"}</button></div><div class="card-copy"><span class="card-platform">${esc(g.platform)} <span>${g.year}</span></span><h3><button data-details="${esc(g.id)}">${esc(g.title)}</button></h3><div class="card-meta"><span>${esc(g.genre)}</span><span>${esc(g.region)}${g.size && g.size !== "—" ? " · " + esc(g.size) : ""}</span></div><button class="card-cta" data-details="${esc(g.id)}">${isDemo ? "VER PRÉVIA" : "VER JOGO & DOWNLOAD"} <span>↗</span></button></div></article>`,
+            `<article class="game-card"><div class="cover-wrap"><button class="cover-button" data-details="${esc(g.id)}" aria-label="Ver detalhes de ${esc(g.title)}"><img src="${esc(coverUrl(g))}" alt="Capa de ${esc(g.title)}" loading="lazy"></button>${isDemo ? '<span class="cover-tag">EXEMPLO</span>' : g.featured ? '<span class="cover-tag">★ DESTAQUE</span>' : ""}<button class="fav-button ${favorites.has(g.id) ? "selected" : ""}" data-fav="${esc(g.id)}" aria-label="Favoritar ${esc(g.title)}" aria-pressed="${favorites.has(g.id)}">${favorites.has(g.id) ? "♥" : "♡"}</button></div><div class="card-copy"><span class="card-platform">${esc(g.platform)} <span>${g.year}</span></span><h3><button data-details="${esc(g.id)}">${esc(g.title)}</button></h3><div class="card-meta"><span>${esc(g.genre)}</span><span>${esc(g.region)}${g.size && g.size !== "—" ? " · " + esc(g.size) : ""}</span></div>${!isDemo && driveDownload(g.link) ? `<a class="card-cta" href="${esc(driveDownload(g.link))}" target="_blank" rel="noopener noreferrer" aria-label="Baixar ${esc(g.title)}">BAIXAR <span>↓</span></a>` : `<button class="card-cta" data-details="${esc(g.id)}">VER DETALHES <span>↗</span></button>`}</div></article>`,
         )
         .join("")
     : '<div class="empty-state"><span>◌</span><h3>Nenhum jogo por aqui.</h3><p>Tente outro console, outra busca ou marque seus favoritos.</p><button class="btn btn-orange" id="empty-clear">LIMPAR FILTROS</button></div>';
@@ -179,6 +180,7 @@ $("game-dialog").addEventListener("click", (e) => {
 async function load() {
   try {
     const c = await api("/api/catalog");
+    const selectedGenre = $("genre").value;
     if (c.revision !== lastRevision) {
       lastRevision = c.revision;
       isDemo = c.games.length === 0;
@@ -187,10 +189,13 @@ async function load() {
       $("genre").innerHTML =
         '<option value="">Todos os gêneros</option>' +
         c.genres.map((g) => `<option>${esc(g)}</option>`).join("");
+      if (c.genres.includes(selectedGenre)) $("genre").value = selectedGenre;
+      if (activePlatform && !games.some((g) => g.platform === activePlatform))
+        activePlatform = "";
       message(
         "catalog-notice",
         isDemo
-          ? "Seu acervo está pronto para começar. Os jogos abaixo são exemplos visuais, sem arquivos de download. Cadastre seus jogos na área admin."
+          ? "Prévia: jogos de exemplo, sem downloads. Adicione seus jogos na área admin."
           : "",
       );
       render();
