@@ -32,10 +32,18 @@ const base = path.resolve(__dirname, ".."),
   dataDir = process.env.RETRO_DATA_DIR || path.join(base, "dados"),
   catalogPath = path.join(dataDir, "catalogo.txt"),
   authPath = path.join(dataDir, "admin.txt");
+const cloud = require("./supabase").configuredStore();
+const production = process.env.NODE_ENV === "production";
+const configuredOrigin =
+  process.env.PUBLIC_URL || process.env.RENDER_EXTERNAL_URL;
+const publicOrigin = configuredOrigin ? new URL(configuredOrigin).origin : null;
+const secureCookie = production ? "; Secure" : "";
 const sessions = new Map(),
   attempts = new Map();
 let queue = Promise.resolve();
 async function read(file, fallback) {
+  if (cloud)
+    return cloud.read(file === authPath ? "admin" : "catalog", fallback);
   try {
     return JSON.parse(await fs.readFile(file, "utf8"));
   } catch (e) {
@@ -44,6 +52,7 @@ async function read(file, fallback) {
   }
 }
 async function atomic(file, value) {
+  if (cloud) return cloud.write(file === authPath ? "admin" : "catalog", value);
   await fs.mkdir(path.dirname(file), { recursive: true });
   try {
     await fs.copyFile(file, file + ".bak");
@@ -86,7 +95,7 @@ function createSession(res) {
   sessions.set(t, { expires: Date.now() + 8 * 3600000 });
   res.setHeader(
     "Set-Cookie",
-    `retro_session=${t}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800`,
+    `retro_session=${t}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${secureCookie}`,
   );
 }
 function webUrl(value) {
@@ -194,9 +203,11 @@ const server = http.createServer(async (req, res) => {
       if (
         req.method !== "GET" &&
         (!req.headers.origin ||
-          req.headers.origin !== `http://${req.headers.host}`)
+          req.headers.origin !== (publicOrigin || `http://${req.headers.host}`))
       )
         return send(403, { error: "Origem não autorizada." });
+      if (route === "/api/health" && req.method === "GET")
+        return send(200, { ok: true });
       if (route === "/api/catalog" && req.method === "GET") {
         const c = await catalog();
         return send(200, {
@@ -212,6 +223,10 @@ const server = http.createServer(async (req, res) => {
           authenticated: authorized(req),
         });
       if (route === "/api/setup" && req.method === "POST") {
+        if (production)
+          return send(403, {
+            error: "A senha inicial é configurada no ambiente do servidor.",
+          });
         if (
           !["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(
             req.socket.remoteAddress,
@@ -267,7 +282,7 @@ const server = http.createServer(async (req, res) => {
         sessions.delete(token(req));
         res.setHeader(
           "Set-Cookie",
-          "retro_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0",
+          `retro_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookie}`,
         );
         return send(200, { ok: true });
       }
@@ -329,6 +344,10 @@ const server = http.createServer(async (req, res) => {
           });
         const file =
           crypto.randomUUID() + "." + (type === "jpeg" ? "jpg" : type);
+        if (cloud)
+          return send(201, {
+            url: await cloud.uploadCover(file, buffer, "image/" + type),
+          });
         await fs.mkdir(path.join(dataDir, "covers"), { recursive: true });
         await fs.writeFile(path.join(dataDir, "covers", file), buffer);
         return send(201, { url: "/covers/" + file });
@@ -415,4 +434,18 @@ const server = http.createServer(async (req, res) => {
     });
   }
 });
-module.exports = { server, game };
+async function initializeAdmin() {
+  if (!production) return;
+  if (!cloud) throw Error("Produção exige Supabase para preservar seus dados.");
+  await locked(async () => {
+    if (await read(authPath, null)) return;
+    const password = process.env.RETRO_ADMIN_PASSWORD;
+    if (!password || password.length < 10 || password.length > 128)
+      throw Error(
+        "Configure RETRO_ADMIN_PASSWORD com 10 a 128 caracteres para o primeiro acesso.",
+      );
+    const salt = crypto.randomBytes(16).toString("hex");
+    await atomic(authPath, { salt, hash: hash(password, salt) });
+  });
+}
+module.exports = { server, game, initializeAdmin };

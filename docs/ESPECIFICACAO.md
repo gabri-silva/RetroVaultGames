@@ -1,13 +1,15 @@
-# RetroVault — especificação simples v1
+# RetroVaultPS2 — especificação v2
 
-## Cliente
-Catálogo por console, busca em título e descrição, filtro por gênero, ordenação, paginação, favoritos locais, detalhes do jogo, botão para download externo e atualização automática. Layout nostálgico responsivo com artes vetoriais originais.
+Cliente com grade de jogos, busca, filtros por console e gênero, favoritos, detalhes, download externo e atualização automática. Admin com login, senha própria, cadastro, edição, capas, rascunhos, publicação e exportação.
 
-## Administrador
-Primeira configuração de senha, login/logout, troca de senha, cadastro e edição de metadados, capas por upload ou URL HTTPS, rascunhos, publicação, destaque, exclusão, busca e exportação dos cadastros.
+## Armazenamento
 
-## Dados e arquitetura
-Um servidor local Node.js com módulos nativos atende ambas as interfaces. O cliente consulta apenas os jogos publicados. Escritas autenticadas, verificadas por origem e serializadas usam arquivos temporários, backup anterior e revisão para evitar sobrescritas. Metadados e credenciais são privados; apenas capas são públicas. Links de ROMs/ISOs permanecem nos serviços de arquivos. Nenhum banco de dados foi configurado.
+Local: Node.js atende o site em loopback e salva texto JSON em dados/, com cópia .bak anterior. Online: Render executa uma instância Node.js e usa a Data API do Supabase para metadados e hash da senha, e Storage para capas. RLS e permissões bloqueiam acesso direto de visitantes à tabela. As ROMs continuam no Drive. Nenhuma chave secreta é enviada ao frontend.
+
+## Publicação
+
+render.yaml configura serviço Free, Node.js 22 e start:render. A produção escuta a porta definida pelo Render em 0.0.0.0, verifica a origem HTTPS e usa cookies Secure. O admin inicial é criado pela variável RETRO_ADMIN_PASSWORD; a configuração pública de senha é bloqueada em produção. Sessões expiram em oito horas e se encerram ao reiniciar. Configuração incompleta do Supabase impede a inicialização em produção, evitando perda de dados por fallback ao disco temporário.
 
 ## Limites
-Servidor em loopback; nenhuma publicação externa nesta versão. Sem OAuth de Drive, upload de ISOs, importação pela interface, estatísticas de downloads ou contas de visitantes. Recursos do Drive dependem de compartilhamento e disponibilidade. Capas externas dependem do provedor. Capas removidas de um cadastro permanecem em dados/covers para não perder arquivos de backups.
+
+Uma instância por acervo, sem OAuth de Drive, upload de ISOs, importação pela interface ou migração automática dos cadastros locais. Os planos gratuitos têm cotas e podem suspender serviços ociosos. Consulte docs/PUBLICAR-RENDER.md.

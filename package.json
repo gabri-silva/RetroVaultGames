@@ -4,10 +4,11 @@
   "private": true,
   "description": "Catálogo retrô pessoal com painel administrativo",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "start": "node server/iniciar.js",
-    "test": "node --test tests/api.test.js"
+    "test": "node --test",
+    "start:render": "node server/production.js"
   }
 }

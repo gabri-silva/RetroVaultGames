@@ -1,4 +1,4 @@
-# RetroVault
+# RetroVaultPS2
 
 Catálogo retrô com duas interfaces: cliente público e painel administrativo protegido por senha. HTML, CSS, JavaScript, Bootstrap local e servidor Node.js sem dependências externas.
 
@@ -8,7 +8,7 @@ Repositório configurado: https://github.com/gabri-silva/RetroVaultGames.git, br
 
 ## Como abrir
 
-Clique duas vezes em `iniciar.bat`. O navegador abre depois da verificação do servidor. Mantenha a janela aberta; Ctrl+C encerra. O endereço inicial é http://127.0.0.1:4320; quando ocupado, escolhe outra porta até 4340. Use o endereço mostrado na janela. Alternativamente, execute `npm start` nesta pasta. Requer Node.js 18+ (já disponível neste PC).
+Clique duas vezes em `iniciar.bat`. O navegador abre depois da verificação do servidor. Mantenha a janela aberta; Ctrl+C encerra. O endereço inicial é http://127.0.0.1:4320; quando ocupado, escolhe outra porta até 4340. Use o endereço mostrado na janela. Alternativamente, execute `npm start` nesta pasta. No PC, requer Node.js 20+; no Render, a configuração utiliza Node.js 22.
 
 ## Primeiro cadastro
 
@@ -45,8 +45,12 @@ Favoritos ficam neste navegador. Rascunhos não são retornados pela API públic
 
 Enquanto não houver jogos publicados, o cliente mostra seis jogos fictícios como prévia visual, sem downloads. Eles não são cadastros reais. Publicar o primeiro jogo substitui a prévia pelo seu catálogo.
 
-Este projeto funciona localmente, acessível apenas neste PC. Para disponibilizar aos outros usuários na internet, será necessário hospedar o servidor com HTTPS e armazenamento persistente, configurar cookies Secure e rever a inicialização do administrador no ambiente hospedado. A proteção atual foi feita para o uso local. Cadastre arquivos que você possa compartilhar.
+O projeto tem dois modos: local, com arquivos de texto, e online, com Render gratuito + Supabase. Consulte [o roteiro de publicação](docs/PUBLICAR-RENDER.md). O modo online usa banco e Storage do Supabase, cookie Secure, origem HTTPS e senha inicial configurada no ambiente do servidor. Cadastre arquivos que você possa compartilhar.
 
 ## Verificação
 
 `npm test`: testa autenticação, rascunhos, publicação, persistência, revisões e proteção dos dados. Não precisa executar npm install.
+
+## Publicação gratuita
+
+Siga `docs/PUBLICAR-RENDER.md`. O SQL inicial está em `supabase/setup.sql`, o Blueprint em `render.yaml` e as variáveis necessárias em `.env.example`. Não publique suas chaves no GitHub. Nenhum serviço externo foi criado automaticamente.

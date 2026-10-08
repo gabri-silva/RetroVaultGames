@@ -1,3 +1,7 @@
 dados/
 node_modules/
 .test-data-*/
+
+.env
+.env.*
+!.env.example

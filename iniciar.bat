@@ -7,7 +7,7 @@ if errorlevel 1 (
  if exist "C:\Program Files\nodejs\node.exe" (
   set "RETRO_NODE=C:\Program Files\nodejs\node.exe"
  ) else (
-  echo Instale o Node.js 18 ou superior para iniciar.
+  echo Instale o Node.js 20 ou superior para iniciar.
   pause
   exit /b 1
  )
