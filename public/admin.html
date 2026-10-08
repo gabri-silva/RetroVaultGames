@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RetroVault — Sala de controle</title>
+    <link rel="stylesheet" href="vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="admin-body">
+    <div class="top-strip">
+      <span>RETROVAULT / SALA DE CONTROLE</span><span>PLAYER ONE ACCESS</span>
+    </div>
+    <header class="site-header container">
+      <a href="/" class="brand"
+        ><span class="brand-icon">▦</span>RETRO<span>VAULT</span
+        ><small>ADMINISTRADOR</small></a
+      >
+      <nav>
+        <a href="/" target="_blank" rel="noopener">Ver catálogo ↗</a
+        ><button id="logout" class="nav-btn" hidden>Sair</button>
+      </nav>
+    </header>
+    <main class="container admin-main">
+      <div id="admin-notice" class="notice" role="alert" hidden></div>
+      <section id="auth-panel" class="auth-panel">
+        <div class="kicker">ACESSO DO PLAYER ONE</div>
+        <h1 id="auth-title">Sua sala<br />de <em>controle.</em></h1>
+        <p id="auth-copy">Entre para organizar seu acervo.</p>
+        <form id="auth-form">
+          <label for="password" class="form-label">Senha do administrador</label
+          ><input
+            id="password"
+            type="password"
+            class="form-control"
+            required
+            maxlength="128"
+            autocomplete="current-password"
+          />
+          <div id="confirm-group" hidden>
+            <label for="confirm-password" class="form-label mt-3"
+              >Confirme a senha</label
+            ><input
+              id="confirm-password"
+              type="password"
+              class="form-control"
+              maxlength="128"
+              autocomplete="new-password"
+            />
+          </div>
+          <button id="auth-submit" class="btn btn-orange mt-4 w-100">
+            ENTRAR →
+          </button>
+        </form>
+        <small>Seu catálogo público funciona sem login.</small>
+      </section>
+      <section id="admin-panel" hidden>
+        <div class="section-head">
+          <div>
+            <div class="kicker">CONTROLE TOTAL DO SEU ACERVO</div>
+            <h1>Olá, <em>Player One.</em></h1>
+            <p class="muted">
+              Cadastre aqui. Publique para aparecer no catálogo.
+            </p>
+          </div>
+          <button id="new-game" class="btn btn-orange">+ NOVO JOGO</button>
+        </div>
+        <div class="admin-stats">
+          <article>
+            <span>TOTAL NO ACERVO</span><strong id="stat-total">0</strong>
+          </article>
+          <article>
+            <span>PUBLICADOS</span><strong id="stat-published">0</strong>
+          </article>
+          <article>
+            <span>RASCUNHOS</span><strong id="stat-drafts">0</strong>
+          </article>
+        </div>
+        <div class="admin-layout">
+          <section class="editor-panel">
+            <div class="panel-heading">
+              <h2 id="editor-title">Novo jogo</h2>
+              <span class="tag">CADASTRO</span>
+            </div>
+            <form id="game-form">
+              <input type="hidden" id="game-id" /><label
+                for="title"
+                class="form-label"
+                >Título do jogo *</label
+              ><input
+                id="title"
+                class="form-control"
+                required
+                maxlength="100"
+                placeholder="O nome da sua próxima memória"
+              />
+              <div class="row g-3 mt-1">
+                <div class="col-sm-6">
+                  <label for="platform" class="form-label">Console *</label
+                  ><select id="platform" class="form-select" required></select>
+                </div>
+                <div class="col-sm-6">
+                  <label for="game-genre" class="form-label">Gênero *</label
+                  ><select
+                    id="game-genre"
+                    class="form-select"
+                    required
+                  ></select>
+                </div>
+                <div class="col-sm-4">
+                  <label for="year" class="form-label">Ano *</label
+                  ><input
+                    id="year"
+                    type="number"
+                    min="1970"
+                    max="2027"
+                    value="1998"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-sm-4">
+                  <label for="region" class="form-label">Região</label
+                  ><select id="region" class="form-select">
+                    <option>USA</option>
+                    <option>Europe</option>
+                    <option>Japan</option>
+                    <option>Brazil</option>
+                    <option>World</option>
+                  </select>
+                </div>
+                <div class="col-sm-4">
+                  <label for="language" class="form-label">Idioma</label
+                  ><input
+                    id="language"
+                    class="form-control"
+                    maxlength="40"
+                    placeholder="Português"
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <label for="size" class="form-label">Tamanho</label
+                  ><input
+                    id="size"
+                    class="form-control"
+                    maxlength="30"
+                    placeholder="Ex.: 700 MB"
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <label for="format" class="form-label">Formato</label
+                  ><select id="format" class="form-select">
+                    <option>ISO</option>
+                    <option>BIN/CUE</option>
+                    <option>ROM</option>
+                    <option>ZIP</option>
+                    <option>7Z</option>
+                    <option>CSO</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+              </div>
+              <label for="description" class="form-label mt-3"
+                >Sobre o jogo</label
+              ><textarea
+                id="description"
+                rows="4"
+                maxlength="5000"
+                class="form-control"
+                placeholder="História, versão, observações…"
+              ></textarea
+              ><label for="link" class="form-label mt-3"
+                >Link de download no Drive</label
+              ><input
+                id="link"
+                type="url"
+                class="form-control"
+                placeholder="https://drive.google.com/file/d/…/view"
+                maxlength="2000"
+              /><small class="form-hint"
+                >Cole o link compartilhado do arquivo. Ele deve permitir acesso
+                aos visitantes. Obrigatório para publicar.</small
+              ><label for="cover" class="form-label mt-3"
+                >Capa do jogo (URL HTTPS)</label
+              ><input
+                id="cover"
+                type="url"
+                class="form-control"
+                maxlength="2000"
+                placeholder="https://…/capa.jpg"
+              />
+              <div class="cover-upload">
+                <label for="cover-file">Ou envie uma capa do PC</label
+                ><input
+                  id="cover-file"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  class="form-control"
+                /><small>PNG, JPG ou WebP · até 3 MB</small>
+                <div class="cover-preview-wrap">
+                  <img
+                    id="cover-preview"
+                    src="assets/cover-default.svg"
+                    alt="Prévia da capa"
+                  /><button id="remove-cover" class="clear-btn" type="button">
+                    Remover capa
+                  </button>
+                </div>
+              </div>
+              <div class="checks">
+                <label
+                  ><input id="published" type="checkbox" /> Publicar no
+                  catálogo</label
+                ><label
+                  ><input id="featured" type="checkbox" /> Destacar este
+                  jogo</label
+                >
+              </div>
+              <div class="editor-actions">
+                <button id="save-game" class="btn btn-orange" type="submit">
+                  SALVAR JOGO →</button
+                ><button
+                  id="cancel-edit"
+                  type="button"
+                  class="btn btn-outline-light"
+                >
+                  Limpar
+                </button>
+              </div>
+            </form>
+          </section>
+          <section class="management-panel">
+            <div class="panel-heading">
+              <h2>Seu acervo</h2>
+              <button id="refresh" class="clear-btn">Atualizar ↺</button>
+            </div>
+            <input
+              id="admin-search"
+              type="search"
+              class="form-control mb-3"
+              placeholder="Buscar no seu acervo"
+              aria-label="Buscar no acervo administrativo"
+            />
+            <div id="admin-list"></div>
+          </section>
+        </div>
+        <section class="settings-panel">
+          <div>
+            <h2>Backup do acervo</h2>
+            <p class="muted">
+              Exporte os cadastros para guardar uma cópia. As capas enviadas
+              ficam na pasta dados/covers.
+            </p>
+            <button id="export-catalog" class="btn btn-outline-light">
+              EXPORTAR CADASTROS ↓
+            </button>
+          </div>
+          <form id="password-form">
+            <h2>Trocar senha</h2>
+            <label for="current-password" class="form-label">Senha atual</label
+            ><input
+              id="current-password"
+              type="password"
+              class="form-control"
+              required
+              maxlength="128"
+              autocomplete="current-password"
+            /><label for="new-password" class="form-label mt-2"
+              >Nova senha (mínimo 10 caracteres)</label
+            ><input
+              id="new-password"
+              type="password"
+              class="form-control"
+              required
+              minlength="10"
+              maxlength="128"
+              autocomplete="new-password"
+            /><button class="btn btn-outline-light mt-3">
+              ATUALIZAR SENHA
+            </button>
+          </form>
+        </section>
+      </section>
+    </main>
+    <footer class="container">
+      <span class="brand">RETRO<span>VAULT</span></span>
+      <p>Administração local · Seu acervo, no seu controle.</p>
+      <a href="/">Voltar ao cliente ↗</a>
+    </footer>
+    <script src="js/common.js"></script>
+    <script src="js/admin.js"></script>
+  </body>
+</html>
