@@ -1508,3 +1508,128 @@ button:disabled {
     font-size: 8px;
   }
 }
+
+/* Paletas compartilhadas pelo catálogo e painel administrativo. */
+:root {
+  color-scheme: dark;
+  --soft-panel: #263126;
+  --notice-border: #53664a;
+  --notice-text: #d2e6be;
+  --placeholder: #84917f;
+}
+:root[data-theme="red"] {
+  --bg: #201315;
+  --panel: #301e23;
+  --cream: #fff0e5;
+  --muted: #c5a5ac;
+  --line: #5d3740;
+  --orange: #ff8b91;
+  --mint: #f3c2b6;
+  --soft-panel: #43252d;
+  --notice-border: #8f4b58;
+  --notice-text: #ffe0e0;
+  --placeholder: #bb939b;
+}
+:root[data-theme="green"] {
+  --bg: #10211a;
+  --panel: #192e23;
+  --cream: #edf7e4;
+  --muted: #a2bea9;
+  --line: #345941;
+  --orange: #8ee6a7;
+  --mint: #b9edc5;
+  --soft-panel: #243e2b;
+  --notice-border: #548760;
+  --notice-text: #d6f7d4;
+  --placeholder: #8caf95;
+}
+:root[data-theme="metallic-blue"] {
+  --bg: #101b2b;
+  --panel: #1b2d44;
+  --cream: #edf3fc;
+  --muted: #a8bcd5;
+  --line: #3e5876;
+  --orange: #89ceff;
+  --mint: #c3dcef;
+  --soft-panel: #263d58;
+  --notice-border: #5b82a6;
+  --notice-text: #d3eaff;
+  --placeholder: #91abca;
+}
+:root[data-theme="metallic-blue"] body {
+  background: linear-gradient(135deg, #172942 0%, var(--bg) 45%, #142238 100%);
+  background-attachment: fixed;
+}
+:root[data-theme="metallic-blue"] .game-card,
+:root[data-theme="metallic-blue"] .editor-panel,
+:root[data-theme="metallic-blue"] .management-panel {
+  background: linear-gradient(145deg, #263d58, var(--panel) 55%);
+  box-shadow: inset 0 1px 0 #b6d7ff18;
+}
+.theme-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-control > span {
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.theme-control .form-select {
+  width: 145px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.site-header {
+  flex-wrap: wrap;
+}
+.site-header nav {
+  flex-wrap: wrap;
+}
+.notice {
+  background: var(--soft-panel);
+  border-color: var(--notice-border);
+  color: var(--notice-text);
+}
+.detail-tags span {
+  background: var(--soft-panel);
+}
+.form-control::placeholder,
+.search input::placeholder {
+  color: var(--placeholder);
+}
+.fav-button {
+  background: var(--panel);
+  color: var(--cream);
+}
+.game-card:hover {
+  border-color: var(--orange);
+}
+.btn-orange:hover,
+.btn-orange:focus {
+  background: var(--orange);
+  border-color: var(--orange);
+  filter: brightness(1.1);
+}
+.form-control:focus,
+.form-select:focus {
+  box-shadow: none;
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+}
+.search:focus-within {
+  outline-color: var(--orange);
+}
+@media (max-width: 600px) {
+  .catalog-client .site-header nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .admin-body .site-header nav {
+    gap: 15px;
+  }
+  .theme-control .form-select {
+    width: 135px;
+  }
+}

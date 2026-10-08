@@ -4,16 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>RetroVaultPS2 — Catálogo de jogos</title>
+    <script src="js/theme.js"></script>
     <link rel="stylesheet" href="vendor/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body class="catalog-client">
     <header class="site-header container">
       <a href="/" class="brand" aria-label="RetroVaultPS2, catálogo de jogos">
-        <span class="brand-icon" aria-hidden="true">▦</span>RETRO<span>VAULTPS2</span
+        <span class="brand-icon" aria-hidden="true">▦</span>RETRO<span
+          >VAULTPS2</span
         >
       </a>
       <nav aria-label="Navegação do catálogo">
+        <label class="theme-control" for="theme-select">
+          <span>Tema</span>
+          <select
+            id="theme-select"
+            class="form-select"
+            aria-label="Escolher tema"
+          >
+            <option value="classic">Clássico</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="metallic-blue">Metalic Blue</option>
+          </select>
+        </label>
         <button id="favorites" class="nav-btn" aria-pressed="false">
           ♡ Favoritos <span id="fav-count">0</span>
         </button>

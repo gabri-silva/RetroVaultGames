@@ -54,3 +54,7 @@ O projeto tem dois modos: local, com arquivos de texto, e online, com Render gra
 ## Publicação gratuita
 
 Siga `docs/PUBLICAR-RENDER.md`. O SQL inicial está em `supabase/setup.sql`, o Blueprint em `render.yaml` e as variáveis necessárias em `.env.example`. Não publique suas chaves no GitHub. Nenhum serviço externo foi criado automaticamente.
+
+## Temas
+
+O seletor Tema no cabeçalho oferece Clássico, Red, Green e Metalic Blue. A preferência fica salva no navegador e vale também para o admin. As outras abas do mesmo endereço acompanham a mudança. Não exige login.

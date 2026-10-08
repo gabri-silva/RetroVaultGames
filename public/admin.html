@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>RetroVaultPS2 — Sala de controle</title>
+    <script src="js/theme.js"></script>
     <link rel="stylesheet" href="vendor/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -18,6 +19,19 @@
         ><small>ADMINISTRADOR</small></a
       >
       <nav>
+        <label class="theme-control" for="theme-select">
+          <span>Tema</span>
+          <select
+            id="theme-select"
+            class="form-select"
+            aria-label="Escolher tema"
+          >
+            <option value="classic">Clássico</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="metallic-blue">Metalic Blue</option>
+          </select>
+        </label>
         <a href="/" target="_blank" rel="noopener">Ver catálogo ↗</a
         ><button id="logout" class="nav-btn" hidden>Sair</button>
       </nav>
