@@ -29,6 +29,14 @@
             <option value="metallic-blue">Metalic Blue</option>
           </select>
         </label>
+        <button
+          id="chat-toggle"
+          class="nav-btn"
+          aria-expanded="false"
+          aria-controls="chat-panel"
+        >
+          Chat
+        </button>
         <button id="favorites" class="nav-btn" aria-pressed="false">
           ♡ Favoritos <span id="fav-count">0</span>
         </button>
@@ -95,7 +103,78 @@
       </button>
       <div id="game-details"></div>
     </dialog>
+
+    <section
+      id="chat-panel"
+      class="chat-panel"
+      aria-labelledby="chat-title"
+      hidden
+    >
+      <div class="chat-heading">
+        <div>
+          <h2 id="chat-title">Chat retrô</h2>
+          <small>Somente texto · sem links · sem palavrões</small>
+        </div>
+        <button id="chat-close" type="button" aria-label="Fechar chat">
+          ×
+        </button>
+      </div>
+      <div id="chat-notice" class="notice" role="alert" hidden></div>
+      <form id="chat-join">
+        <label for="chat-nick" class="form-label">Como quer ser chamado?</label
+        ><input
+          id="chat-nick"
+          class="form-control"
+          required
+          minlength="3"
+          maxlength="20"
+          autocomplete="off"
+          placeholder="Seu nick"
+        />
+        <p class="muted">
+          Não precisa de cadastro. Escolha um nick de 3 a 20 caracteres.
+        </p>
+        <button id="chat-enter" class="btn btn-orange w-100">
+          ENTRAR NO CHAT →
+        </button>
+      </form>
+      <div id="chat-room" hidden>
+        <div class="chat-identity">
+          <span>Você: <strong id="chat-user"></strong></span
+          ><button id="chat-leave" type="button" class="clear-btn">Sair</button>
+        </div>
+        <div
+          id="chat-messages"
+          class="chat-messages"
+          role="log"
+          aria-live="polite"
+          aria-label="Mensagens do chat"
+          tabindex="0"
+        ></div>
+        <form id="chat-compose">
+          <label for="chat-text" class="visually-hidden">Sua mensagem</label
+          ><textarea
+            id="chat-text"
+            class="form-control"
+            rows="3"
+            maxlength="500"
+            required
+            placeholder="Conte algo sobre seus jogos favoritos…"
+          ></textarea>
+          <div class="chat-compose-footer">
+            <small id="chat-counter">0/500 · mínimo 25</small
+            ><button id="chat-send" class="btn btn-orange" disabled>
+              ENVIAR →
+            </button>
+          </div>
+        </form>
+        <small class="chat-history-note"
+          >Últimas 60 mensagens das últimas 24 horas.</small
+        >
+      </div>
+    </section>
     <script src="js/common.js"></script>
     <script src="js/client.js"></script>
+    <script src="js/chat.js"></script>
   </body>
 </html>

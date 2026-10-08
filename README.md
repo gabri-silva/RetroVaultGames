@@ -58,3 +58,11 @@ Siga `docs/PUBLICAR-RENDER.md`. O SQL inicial está em `supabase/setup.sql`, o B
 ## Temas
 
 O seletor Tema no cabeçalho oferece Clássico, Red, Green e Metalic Blue. A preferência fica salva no navegador e vale também para o admin. As outras abas do mesmo endereço acompanham a mudança. Não exige login.
+
+## Chat anônimo
+
+O botão Chat abre a sala e solicita um nick. Nicks de 3 a 20 caracteres, únicos entre sessões ativas, recebem uma cor aleatória em negrito. Mensagens precisam de 25 a 500 caracteres e só aceitam texto, sem links, endereços de e-mail, HTML ou anexos. O servidor verifica padrões de links e uma lista de expressões em server/chat.js, incluindo algumas variações com separadores e números. A lista pode ser ampliada; nenhum filtro automático cobre todas as formas de ofensa ou links disfarçados.
+
+Há intervalo mínimo de 5 segundos e bloqueio de repetição consecutiva. Sessões duram duas horas e se encerram ao reiniciar o servidor. A sala mostra até 60 mensagens recentes das últimas 24 horas e atualiza a cada 5 segundos enquanto aberta. O histórico é compartilhado por todos os visitantes: anônimo significa sem conta, não conversa privada. Não é armazenado IP no histórico; o servidor usa temporariamente o endereço de conexão para limitar entradas. O nick não comprova identidade e pode ser usado por outra pessoa após a sessão expirar.
+
+Localmente o histórico fica em dados/chat.txt. Online é salvo na tabela retrovault_chat do Supabase. Execute supabase/chat.sql no SQL Editor antes de fazer o deploy desta atualização. A leitura e a escrita passam pelo servidor; visitantes não recebem chaves do Supabase. Mensagens expiradas deixam de aparecer automaticamente e são removidas do banco quando uma nova mensagem é enviada.

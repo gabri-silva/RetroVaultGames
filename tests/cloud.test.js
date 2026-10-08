@@ -1,6 +1,7 @@
 const { test } = require("node:test"),
   assert = require("node:assert/strict");
 test("Supabase: dados sobrevivem ao reinício, capas remotas e login HTTPS", async () => {
+  let chatRows = [];
   const nativeFetch = global.fetch,
     rows = new Map(),
     uploads = new Map();
@@ -17,6 +18,19 @@ test("Supabase: dados sobrevivem ao reinício, capas remotas e login HTTPS", asy
       return nativeFetch(url, options);
     assert.equal(options.headers.apikey, "sb_secret_test_only");
     assert.equal(options.headers.Authorization, undefined);
+    if (u.pathname === "/rest/v1/retrovault_chat") {
+      if (options.method === "DELETE") {
+        chatRows = chatRows.filter(
+          (m) => Date.parse(m.created_at) > Date.now() - 24 * 3600000,
+        );
+        return new Response(null, { status: 204 });
+      }
+      if (options.method === "POST") {
+        chatRows.push(JSON.parse(options.body));
+        return new Response(null, { status: 201 });
+      }
+      return Response.json([...chatRows].reverse().slice(0, 60));
+    }
     if (u.pathname === "/rest/v1/retrovault_state") {
       if (options.method === "POST") {
         const row = JSON.parse(options.body);
@@ -93,6 +107,25 @@ test("Supabase: dados sobrevivem ao reinício, capas remotas e login HTTPS", asy
     assert.equal(login.status, 200);
     assert.ok(login.cookie.includes("; Secure"));
     cookie = login.cookie.split(";")[0];
+    const joinedChat = await req("/api/chat/join", "POST", {
+      nick: "PlayerOnline",
+    });
+    assert.equal(joinedChat.status, 201);
+    assert.ok(joinedChat.cookie.includes("; Secure"));
+    cookie += "; " + joinedChat.cookie.split(";")[0];
+    assert.equal(
+      (
+        await req("/api/chat/messages", "POST", {
+          text: "Eu adoro jogar os clássicos de aventura nas férias.",
+        })
+      ).status,
+      201,
+    );
+    assert.equal(chatRows[0].nick, "PlayerOnline");
+    assert.equal(
+      (await req("/api/chat/messages")).data.messages[0].nick,
+      "PlayerOnline",
+    );
     const image =
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=";
     const uploaded = await req("/api/covers", "POST", {

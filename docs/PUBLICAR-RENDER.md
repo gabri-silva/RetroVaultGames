@@ -61,3 +61,7 @@ Exporte os cadastros pelo painel e conserve cópias das capas. No modo Supabase,
 - Primeira página lenta: o plano gratuito pode estar retomando o servidor.
 
 Referências: https://render.com/docs/free · https://render.com/docs/blueprint-spec · https://supabase.com/docs/guides/getting-started/api-keys
+
+## Atualização do chat
+
+Antes de publicar a versão com chat, execute `supabase/chat.sql` no SQL Editor. Isso cria a tabela de mensagens e preserva seu catálogo. Depois envie os commits e faça um novo deploy no Render. Nenhuma variável extra é necessária.

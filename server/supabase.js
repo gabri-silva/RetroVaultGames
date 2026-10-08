@@ -49,6 +49,36 @@ function createSupabaseStore({ url, key, fetchImpl = fetch }) {
         body: JSON.stringify({ key, value }),
       });
     },
+    async chatMessages() {
+      const query = new URLSearchParams({
+        select: "id,user_id,nick,color,text,created_at",
+        order: "created_at.desc",
+        limit: "60",
+        created_at: "gt." + new Date(Date.now() - 24 * 3600000).toISOString(),
+      });
+      const data = await (
+        await request("/rest/v1/retrovault_chat?" + query)
+      ).json();
+      if (!Array.isArray(data)) throw Error("Resposta inesperada do chat.");
+      return data.reverse();
+    },
+    async chatInsert(message) {
+      // Remove histórico expirado antes de inserir, mantendo apenas o último dia.
+      const expired = new URLSearchParams({
+        created_at: "lt." + new Date(Date.now() - 24 * 3600000).toISOString(),
+      });
+      await request("/rest/v1/retrovault_chat?" + expired, {
+        method: "DELETE",
+      });
+      await request("/rest/v1/retrovault_chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(message),
+      });
+    },
     async uploadCover(name, buffer, type) {
       await request(
         "/storage/v1/object/retrovault-covers/" + encodeURIComponent(name),

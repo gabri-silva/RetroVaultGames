@@ -180,6 +180,19 @@ async function body(req) {
     throw e;
   }
 }
+const chat = require("./chat").createChat({
+  cloud,
+  dataDir,
+  production,
+  body,
+  send: (res, status, value) => {
+    res.writeHead(status, {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    });
+    res.end(JSON.stringify(value));
+  },
+});
 const server = http.createServer(async (req, res) => {
   const send = (status, value) => {
     res.writeHead(status, {
@@ -206,6 +219,7 @@ const server = http.createServer(async (req, res) => {
           req.headers.origin !== (publicOrigin || `http://${req.headers.host}`))
       )
         return send(403, { error: "Origem não autorizada." });
+      if (route.startsWith("/api/chat/")) return await chat(req, res, route);
       if (route === "/api/health" && req.method === "GET")
         return send(200, { ok: true });
       if (route === "/api/catalog" && req.method === "GET") {
